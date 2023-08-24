@@ -1,5 +1,8 @@
 def call(){
       node{
+        tool{
+            maven 'maven3.9.4'
+        }
         environment{
         SCANNER_HOME= tool 'sonar-scanner'
         }
