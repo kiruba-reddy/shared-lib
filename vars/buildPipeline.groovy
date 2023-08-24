@@ -9,6 +9,7 @@ def call(){
         stage('SonarQube Analysis') {
             def mvn = tool 'maven';
             withSonarQubeEnv('sonarQube-server') {
+                sh '${mvn}/bin/mvn -version'
             sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=kiruba-reddy_UserDetails_AYon97PSL8-qgnsNu7aQ"
             }
         }
