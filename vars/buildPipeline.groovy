@@ -1,8 +1,5 @@
 def call(){
       node{
-        tools{
-            maven 'maven3.9.4'
-        }
         environment{
         SCANNER_HOME= tool 'sonar-scanner'
         }
@@ -10,7 +7,7 @@ def call(){
             checkout scm
         }
         stage('SonarQube Analysis') {
-            def mvn = tool 'Default Maven';
+            def mvn = tool 'maven';
             withSonarQubeEnv('sonarQube-server') {
             sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=kiruba-reddy_UserDetails_AYon97PSL8-qgnsNu7aQ"
             }
