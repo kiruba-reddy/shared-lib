@@ -13,6 +13,14 @@ def call(){
                 sh "${mvn}/bin/mvn sonar:sonar -Dsonar.projectKey=kiruba-reddy_UserDetails_AYon97PSL8-qgnsNu7aQ"
             }
         }
+        stage("Quality Gate"){
+          timeout(time: 1, unit: 'HOURS') {
+              def qg = waitForQualityGate()
+              if (qg.status != 'OK') {
+                  error "Pipeline aborted due to quality gate failure: ${qg.status}"
+              }
+          }
+        }
         stage('build'){
             sh 'docker build -t kirubareddy/user-app:${BUILD_NUMBER} .'
         }
