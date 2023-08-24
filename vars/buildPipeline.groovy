@@ -1,7 +1,16 @@
 def call(){
       node{
-        stage('checkout'){
-            git branch:'master', url:'https://github.com/kiruba-reddy/UserDetails.git', changelog: false, poll: false
+        environment{
+        SCANNER_HOME= tool 'sonar-scanner'
+        }
+        stage('SCM') {
+            checkout scm
+        }
+        stage('SonarQube Analysis') {
+            def mvn = tool 'Default Maven';
+            withSonarQubeEnv('sonarQube-server') {
+            sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=kiruba-reddy_UserDetails_AYon97PSL8-qgnsNu7aQ"
+            }
         }
         stage('build'){
             sh 'docker build -t kirubareddy/user-app:${BUILD_NUMBER} .'
@@ -13,4 +22,16 @@ def call(){
             }
         }
     }
+}
+
+node {
+  stage('SCM') {
+    checkout scm
+  }
+  stage('SonarQube Analysis') {
+    def mvn = tool 'Default Maven';
+    withSonarQubeEnv() {
+      sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=kiruba-reddy_UserDetails_AYon97PSL8-qgnsNu7aQ"
+    }
+  }
 }
